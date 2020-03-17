@@ -20,7 +20,7 @@ docker run --name app \
 As part to make containers more secure, this container will not run as root, but as uid:gid 1000:1000. Therefore your application should not bind to ports < 1024!
 
 ## Build with
-* [11notes/node](https://github.com/nodejs/docker-node) - Nodejs
+* [node](https://nodejs.org/en/) - Nodejs
 * [Alpine Linux](https://alpinelinux.org/) - Alpine Linux
 
 ## Tips

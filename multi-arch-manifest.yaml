@@ -1,15 +1,15 @@
-image: 11notes/node:latest
+image: 11notes/node:stable
 manifests:
-  - image: 11notes/node:amd64
+  - image: 11notes/node:amd64-12.16.1-alpine3.11
     platform:
       architecture: amd64
       os: linux
-  - image: 11notes/node:arm32v7
+  - image: 11notes/node:arm32v7-12.16.1-alpine3.11
     platform:
       architecture: arm
       os: linux
       variant: v7
-  - image: 11notes/node:arm64v8
+  - image: 11notes/node:arm64v8-12.16.1-alpine3.11
     platform:
       architecture: arm64
       os: linux

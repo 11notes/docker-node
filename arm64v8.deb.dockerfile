@@ -4,7 +4,7 @@
     RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-aarch64/qemu-aarch64-static .
 
 # :: Header
-    FROM arm64v8/node:14.16-alpine3.12
+    FROM arm64v8/node:14.16-buster
     COPY --from=builder qemu-aarch64-static /usr/bin
 
 # :: Run

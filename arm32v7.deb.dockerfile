@@ -1,11 +1,11 @@
 # :: Builder
     FROM alpine AS builder
-    ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-aarch64.tar.gz
-    RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-aarch64/qemu-aarch64-static .
+    ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-arm.tar.gz
+    RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
 
 # :: Header
-    FROM arm64v8/node:14.16-alpine3.12
-    COPY --from=builder qemu-aarch64-static /usr/bin
+    FROM arm32v7/node:14.16-buster
+    COPY --from=builder qemu-arm-static /usr/bin
 
 # :: Run
 	USER root

@@ -4,8 +4,7 @@
 # :: Run
 	USER root
 
-	RUN mkdir -p /app \
-		&& apk --update --no-cache add shadow
+	RUN mkdir -p /app
 	ADD ./source/main.js /app/main.js
 
 	# :: docker -u 1000:1000 (no root initiative)
@@ -13,7 +12,8 @@
 		&& groupmod -g 1000 node \
 		&& chown -R node:node /app
 
-# :: Volumes
+# :: Volumesusermod
+
 	VOLUME ["/app"]
 
 # :: Start

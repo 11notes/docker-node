@@ -10,8 +10,7 @@
 # :: Run
 	USER root
 
-	RUN mkdir -p /app \
-		&& apk --update --no-cache add shadow
+	RUN mkdir -p /app
 	ADD ./source/main.js /app/main.js
 
 	# :: docker -u 1000:1000 (no root initiative)

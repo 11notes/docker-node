@@ -1,4 +1,4 @@
-image: 11notes/node:14.16
+image: 11notes/node:stable
 manifests:
   - image: 11notes/node:amd64-14.16
     platform:

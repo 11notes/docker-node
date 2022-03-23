@@ -1,5 +1,5 @@
 # :: Header
-	FROM node:14.16-buster
+	FROM node:14-bullseye
 
 # :: Run
 	USER root

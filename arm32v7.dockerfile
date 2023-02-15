@@ -4,7 +4,7 @@
     RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
 
 # :: Header
-    FROM arm32v7/node:16.17.0-alpine3.16
+    FROM arm32v7/node:18.14.0-alpine
     COPY --from=builder qemu-arm-static /usr/bin
 
 # :: Run

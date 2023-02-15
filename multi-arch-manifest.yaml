@@ -1,4 +1,4 @@
-image: 11notes/node:18.14.0
+image: 11notes/node:lts
 manifests:
   - image: 11notes/node:amd64-18.14.0
     platform:

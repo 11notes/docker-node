@@ -1,5 +1,5 @@
 # :: Header
-	FROM node:18.14.0-alpine
+	FROM node:18.16.0-alpine
 
 # :: Run
 	USER root
@@ -9,7 +9,8 @@
 			mkdir -p /node_modules; \
 			mkdir -p /node; \
 			apk --update --no-cache add \
-				shadow;
+				shadow; \
+			ln -s /node_modules /node/node_modules;
 
 	# :: copy root filesystem changes
         COPY ./rootfs /

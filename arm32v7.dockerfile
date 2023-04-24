@@ -4,7 +4,7 @@
     RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
 
 # :: Header
-    FROM arm32v7/node:18.14.0-alpine
+    FROM arm32v7/node:18.16.0-alpine
     COPY --from=builder qemu-arm-static /usr/bin
 
 # :: Run
@@ -15,7 +15,8 @@
 			mkdir -p /node_modules; \
 			mkdir -p /node; \
 			apk --update --no-cache add \
-				shadow;
+				shadow; \
+			ln -s /node_modules /node/node_modules;
 
 	# :: copy root filesystem changes
         COPY ./rootfs /

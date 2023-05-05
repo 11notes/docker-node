@@ -5,7 +5,7 @@ const server = http.createServer(function(req, res){
     res.end(`<!DOCTYPE html>
         <html>
             <head>
-                <title>11notes/nginx:stable</title>
+                <title>11notes/node:stable</title>
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata" />
             <style>
                 html,

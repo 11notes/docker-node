@@ -1,33 +1,36 @@
 # :: Builder
-    FROM alpine AS builder
+    FROM alpine AS qemu
     ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-arm.tar.gz
     RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
 
 # :: Header
-    FROM arm32v7/node:18.16.0-alpine
-    COPY --from=builder qemu-arm-static /usr/bin
+    FROM arm32v7/node:18.16.0-alpine3.17
+    COPY --from=qemu qemu-arm-static /usr/bin
 
 # :: Run
 	USER root
 
+  # :: update image
+    RUN set -ex; \
+      apk --update --no-cache add \
+        tzdata \
+        shadow; \
+      apk update; \
+      apk upgrade;
+
 	# :: prepare
 		RUN set-ex; \
-			mkdir -p /node_modules; \
-			mkdir -p /node; \
-			apk --update --no-cache add \
-				shadow; \
-			ln -s /node_modules /node/node_modules;
+			mkdir -p /node;
 
 	# :: copy root filesystem changes
-        COPY ./rootfs /
+    COPY ./rootfs /
 
-    # :: docker -u 1000:1000 (no root initiative)
-        RUN set -ex; \
-            usermod -u 1000 node; \
-			groupmod -g 1000 node; \
-			chown -R node:node \
-				/node \
-				/node_modules;
+  # :: docker -u 1000:1000 (no root initiative)
+    RUN set -ex; \
+      usermod -u 1000 node; \
+      groupmod -g 1000 node; \
+      chown -R node:node \
+        /node;
 
 # :: Volumes
 	VOLUME ["/node"]

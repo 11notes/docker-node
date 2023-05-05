@@ -1,27 +1,30 @@
 # :: Header
-	FROM node:18.16.0-alpine
+	FROM node:18.16.0-alpine3.17
 
 # :: Run
 	USER root
 
+  # :: update image
+    RUN set -ex; \
+      apk --update --no-cache add \
+        tzdata \
+        shadow; \
+      apk update; \
+      apk upgrade;
+
 	# :: prepare
 		RUN set-ex; \
-			mkdir -p /node_modules; \
-			mkdir -p /node; \
-			apk --update --no-cache add \
-				shadow; \
-			ln -s /node_modules /node/node_modules;
+			mkdir -p /node;
 
 	# :: copy root filesystem changes
-        COPY ./rootfs /
+    COPY ./rootfs /
 
-    # :: docker -u 1000:1000 (no root initiative)
-        RUN set -ex; \
-            usermod -u 1000 node; \
-			groupmod -g 1000 node; \
-			chown -R node:node \
-				/node \
-				/node_modules;
+  # :: docker -u 1000:1000 (no root initiative)
+    RUN set -ex; \
+      usermod -u 1000 node; \
+      groupmod -g 1000 node; \
+      chown -R node:node \
+        /node;
 
 # :: Volumes
 	VOLUME ["/node"]

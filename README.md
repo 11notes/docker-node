@@ -1,25 +1,38 @@
 # docker-node
-Simple alpine container with node installed
+
+Nodejs container
 
 ## Volumes
-/app
-
-Purpose: Directory of your application, starting with "main.js"
+* **/node** - Directory of your application
 
 ## Run
 ```shell
-docker run --name app \
-    -v volume-app:/app \
-    -d 11notes/node:stable
+docker run --name node \
+  -v ../node:/node \
+  -d 11notes/node:[tag]
 ```
 
-## Docker -u 1000:1000 (no root initiative)
-As part to make containers more secure, this container will not run as root, but as uid:gid 1000:1000. Therefore your application should not bind to ports < 1024!
+```shell
+docker run --name node \
+  -v ../node:/node \
+  -d 11notes/node:[tag] \
+    node /node/path/to/your/app.js
+```
 
-## Build with
-* [node](https://nodejs.org/en/) - Nodejs
-* [Alpine Linux](https://alpinelinux.org/) - Alpine Linux
+## Defaults
+| Parameter | Value | Description |
+| --- | --- | --- |
+| `user` | docker | user docker |
+| `uid` | 1000 | user id 1000 |
+| `gid` | 1000 | group id 1000 |
+
+## Parent
+* [11notes/alpine:stable](https://github.com/11notes/docker-alpine)
+
+## Built with
+* [nodejs](https://nodejs.org/en/)
+* [Alpine Linux](https://alpinelinux.org/)
 
 ## Tips
-* Don't bind to ports < 1024 (requires root), use NAT
+* Don't bind to ports < 1024 (requires root), use NAT/reverse proxy
 * [Permanent Storge with NFS/CIFS/...](https://github.com/11notes/alpine-docker-netshare) - Module to store permanent container data via NFS/CIFS/...

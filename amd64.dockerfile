@@ -7,6 +7,7 @@
   # :: update image
     RUN set -ex; \
       apk --update --no-cache add \
+        curl \
         tzdata \
         shadow; \
       apk update; \
@@ -19,7 +20,7 @@
 	# :: copy root filesystem changes and add execution rights to init scripts
     COPY ./rootfs /
     RUN set -ex; \
-      chmod +x -R /usr/local/bin
+      chmod +x -R /usr/local/bin;
 
   # :: set uid/gid to 1000:1000 for existing user
     RUN set -ex; \
@@ -31,7 +32,7 @@
       usermod -l docker node; \
       groupmod -n docker node;      
     
-  # :: change home path for existing user and set correct permissions
+  # :: change home path for existing user and set correct permission
     RUN set -ex; \
       usermod -d /node docker; \
       chown -R 1000:1000 \

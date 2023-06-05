@@ -1,6 +1,6 @@
-# docker-node
+# Alpine:: Nodejs
 
-Nodejs container
+Run Nodejs based on Alpine Linux. Small, lightweight, secure and fast.
 
 ## Volumes
 * **/node** - Directory of your application
@@ -35,4 +35,4 @@ docker run --name node \
 
 ## Tips
 * Don't bind to ports < 1024 (requires root), use NAT/reverse proxy
-* [Permanent Storge with NFS/CIFS/...](https://github.com/11notes/alpine-docker-netshare) - Module to store permanent container data via NFS/CIFS/...
+* [Permanent Stroage](https://github.com/11notes/alpine-docker-netshare) - Module to store permanent container data via NFS/CIFS and more

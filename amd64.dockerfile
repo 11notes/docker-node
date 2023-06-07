@@ -29,8 +29,8 @@
       NOROOT_GID="$(id -g ${NOROOT_USER})"; \
       find / -not -path "/proc/*" -user ${NOROOT_UID} -exec chown -h -R 1000:1000 {} \;;\
       find / -not -path "/proc/*" -group ${NOROOT_GID} -exec chown -h -R 1000:1000 {} \;; \
-      usermod -l docker node; \
-      groupmod -n docker node;      
+      usermod -l docker ${NOROOT_USER}; \
+      groupmod -n docker ${NOROOT_USER};      
     
   # :: change home path for existing user and set correct permission
     RUN set -ex; \

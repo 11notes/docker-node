@@ -7,10 +7,12 @@
 
   # :: update image
     RUN set -ex; \
-      apk --update --no-cache add \
+      apk --no-cache add \
         curl \
         tzdata \
-        shadow;
+        shadow; \
+      apk --no-cache upgrade; \
+      rm -rf /var/cache/apk/*;
 
 	# :: prepare image
 		RUN set-ex; \
@@ -29,18 +31,13 @@
       find / -not -path "/proc/*" -user ${NOROOT_UID} -exec chown -h -R 1000:1000 {} \;;\
       find / -not -path "/proc/*" -group ${NOROOT_GID} -exec chown -h -R 1000:1000 {} \;; \
       usermod -l docker ${NOROOT_USER}; \
-      groupmod -n docker ${NOROOT_USER};      
+      groupmod -n docker ${NOROOT_USER};   
     
   # :: change home path for existing user and set correct permission
     RUN set -ex; \
       usermod -d ${APP_ROOT} docker; \
       chown -R 1000:1000 \
         ${APP_ROOT};
-
-  # :: update image binaries and empty cache
-    RUN set -ex; \
-      apk --no-cache --update upgrade; \
-      apk cache clean;
 
 # :: Volumes
 	VOLUME ["${APP_ROOT}"]

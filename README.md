@@ -1,8 +1,8 @@
-# Alpine:: Nodejs
+# Alpine :: Nodejs
 Run Nodejs based on Alpine Linux. Small, lightweight, secure and fast 🏔️
 
 ## Volumes
-* **/node** - Directory of your application
+* **/node** - Directory of your application (app.js)
 
 ## Run
 ```shell
@@ -23,8 +23,8 @@ docker run --name node \
 * [11notes/alpine:stable](https://github.com/11notes/docker-alpine)
 
 ## Built with
-* [nodejs](https://nodejs.org/en/)
-* [Alpine Linux](https://alpinelinux.org/)
+* [nodejs](https://nodejs.org/en)
+* [Alpine Linux](https://alpinelinux.org)
 
 ## Tips
 * Don't bind to ports < 1024 (requires root), use NAT/reverse proxy

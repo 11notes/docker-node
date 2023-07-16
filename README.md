@@ -1,5 +1,5 @@
 # Alpine:: Nodejs
-Run Nodejs based on Alpine Linux. Small, lightweight, secure and fast.
+Run Nodejs based on Alpine Linux. Small, lightweight, secure and fast 🏔️
 
 ## Volumes
 * **/node** - Directory of your application
@@ -11,19 +11,13 @@ docker run --name node \
   -d 11notes/node:[tag]
 ```
 
-```shell
-docker run --name node \
-  -v ../node:/node \
-  -d 11notes/node:[tag] \
-    node /node/path/to/your/app.js
-```
-
 ## Defaults
 | Parameter | Value | Description |
 | --- | --- | --- |
 | `user` | docker | user docker |
 | `uid` | 1000 | user id 1000 |
 | `gid` | 1000 | group id 1000 |
+| `home` | /node | home directory of user docker |
 
 ## Parent
 * [11notes/alpine:stable](https://github.com/11notes/docker-alpine)

@@ -1,5 +1,6 @@
 # :: Header
-	FROM node:18.16.0-alpine3.18
+	FROM node:18.16.1-alpine3.18
+  ENV APP_ROOT=/node
 
 # :: Run
 	USER root
@@ -15,7 +16,7 @@
 
 	# :: prepare image
 		RUN set-ex; \
-			mkdir -p /node;
+			mkdir -p ${APP_ROOT};
 
 	# :: copy root filesystem changes and add execution rights to init scripts
     COPY ./rootfs /
@@ -34,12 +35,12 @@
     
   # :: change home path for existing user and set correct permission
     RUN set -ex; \
-      usermod -d /node docker; \
+      usermod -d ${APP_ROOT} docker; \
       chown -R 1000:1000 \
-        /node;
+        ${APP_ROOT};
 
 # :: Volumes
-	VOLUME ["/node"]
+	VOLUME ["${APP_ROOT}"]
 
 # :: Start
 	USER docker

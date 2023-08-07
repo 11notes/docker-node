@@ -1,18 +1,26 @@
-# :: Docker Build Base
-  FROM node:18.16.1-alpine3.18 AS docker-build-base
+# :: Header
+	FROM node:18.17.0-alpine3.18
   ENV APP_ROOT=/node
-  USER root
 
-  # :: set alpine & node standards
+# :: Run
+	USER root
+
+	# :: prepare image
+		RUN set -ex; \
+			mkdir -p ${APP_ROOT};
+
+  # :: install applications
     RUN set -ex; \
       apk --no-cache add \
         curl \
         tzdata \
         shadow; \
-      apk --no-cache upgrade; \
-      rm -rf /var/cache/apk/*; \
       npm install npm@latest -g; \
       npm update -g;
+
+  # :: update image
+    RUN set -ex; \
+      apk --no-cache upgrade;
 
   # :: set uid/gid to 1000:1000 for existing user
     RUN set -ex; \
@@ -24,16 +32,6 @@
       usermod -l docker ${NOROOT_USER}; \
       groupmod -n docker ${NOROOT_USER}; \
       usermod -d ${APP_ROOT} docker;
-
-# :: Header
-	FROM docker-build-base
-
-# :: Run
-	USER root
-
-	# :: prepare image
-		RUN set -ex; \
-			mkdir -p ${APP_ROOT};
 
 	# :: copy root filesystem changes and set correct permissions
     COPY ./rootfs /

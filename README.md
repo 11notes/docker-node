@@ -1,4 +1,6 @@
 # Alpine :: Nodejs
+![size](https://img.shields.io/docker/image-size/11notes/node/20.10.0?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/node?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/node?color=2b75d6) ![activity](https://img.shields.io/github/commit-activity/m/11notes/docker-node?color=c91cb8) ![commit-last](https://img.shields.io/github/last-commit/11notes/docker-node?color=c91cb8)
+
 Run Nodejs based on Alpine Linux. Small, lightweight, secure and fast 🏔️
 
 ## Volumes
@@ -27,13 +29,13 @@ docker run --name node \
 | `home` | /node | home directory of user docker |
 | `app` | /node/app.js | will try to run app.js by default |
 
-## Parent
+## Parent image
 * [11notes/alpine:stable](https://github.com/11notes/docker-alpine)
 
-## Built with
+## Built with and thanks to
 * [nodejs](https://nodejs.org/en)
 * [Alpine Linux](https://alpinelinux.org)
 
 ## Tips
-* Don't bind to ports < 1024 (requires root), use NAT/reverse proxy
-* [Permanent Stroage](https://github.com/11notes/alpine-docker-netshare) - Module to store permanent container data via NFS/CIFS and more
+* Only use rootless container runtime (podman, rootless docker)
+* Don't bind to ports < 1024 (requires root), use NAT/reverse proxy (haproxy, traefik, nginx)

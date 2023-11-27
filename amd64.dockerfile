@@ -1,5 +1,5 @@
 # :: Header
-	FROM node:18.17.0-alpine3.18
+	FROM node:20.10.0-alpine3.18
   ENV APP_ROOT=/node
 
 # :: Run

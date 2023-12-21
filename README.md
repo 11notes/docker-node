@@ -4,20 +4,13 @@
 Run Nodejs based on Alpine Linux. Small, lightweight, secure and fast 🏔️
 
 ## Volumes
-* **/node** - Directory of your application (app.js)
+* **/node** - Directory of your application (either package.json or main.js)
 
 ## Run
 ```shell
 docker run --name node \
   -v ../node:/node \
   -d 11notes/node:[tag]
-```
-
-```shell
-docker run --name node \
-  -v ../node:/node \
-  -d 11notes/node:[tag] \
-    node /node/my/app.js
 ```
 
 ## Defaults
@@ -27,7 +20,6 @@ docker run --name node \
 | `uid` | 1000 | user id 1000 |
 | `gid` | 1000 | group id 1000 |
 | `home` | /node | home directory of user docker |
-| `app` | /node/app.js | will try to run app.js by default |
 
 ## Parent image
 * [11notes/alpine:stable](https://github.com/11notes/docker-alpine)

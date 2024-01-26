@@ -1,5 +1,11 @@
+# :: Arch
+  FROM alpine AS qemu
+  ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-arm.tar.gz
+  RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
+
 # :: Header
-	FROM node:20.11.0-alpine3.19
+  FROM arm32v7/node:20.11.0-alpine3.19
+  COPY --from=qemu qemu-arm-static /usr/bin
   ENV APP_ROOT=/node
 
 # :: Run

@@ -1,0 +1,11 @@
+image: 11notes/node:20.16.0
+manifests:
+  - image: 11notes/node:amd64-20.16.0
+    platform:
+      architecture: amd64
+      os: linux
+  - image: 11notes/node:arm64v8-20.16.0
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8

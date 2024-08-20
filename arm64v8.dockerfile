@@ -1,8 +1,3 @@
-# :: Arch
-  FROM alpine AS qemu
-  ENV QEMU_URL https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-aarch64.tar.gz
-  RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . && mv qemu-3.0.0+resin-aarch64/qemu-aarch64-static .
-
 # :: Util
   FROM alpine as util
 
@@ -12,8 +7,7 @@
     git clone https://github.com/11notes/util.git;
 
 # :: Header
-  FROM arm64v8/node:20.11.0-alpine3.19
-  COPY --from=qemu qemu-aarch64-static /usr/bin
+  FROM --platform=linux/arm64 arm64v8/node:20.16.0-alpine3.20
   COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
   ENV APP_ROOT=/node
 
@@ -35,7 +29,7 @@
 
   # :: update image
     RUN set -ex; \
-      apk --no-cache upgrade;
+      apk --no-cache --update upgrade;
 
   # :: set uid/gid to 1000:1000 for existing user
     RUN set -ex; \

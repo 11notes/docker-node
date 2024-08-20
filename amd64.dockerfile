@@ -7,7 +7,7 @@
     git clone https://github.com/11notes/util.git;
 
 # :: Header
-	FROM node:20.11.0-alpine3.19
+	FROM node:20.16.0-alpine3.20
   COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
   ENV APP_ROOT=/node
 
@@ -29,7 +29,7 @@
 
   # :: update image
     RUN set -ex; \
-      apk --no-cache upgrade;
+      apk --no-cache --update upgrade;
 
   # :: set uid/gid to 1000:1000 for existing user
     RUN set -ex; \

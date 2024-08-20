@@ -1,0 +1,11 @@
+services:
+  node:
+    image: "11notes/node:20.16.0"
+    container_name: "node"
+    environment:
+      TZ: Europe/Zurich
+    volumes:
+      - "node:/node"
+    restart: always
+volumes:
+  node:

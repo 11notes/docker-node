@@ -1,2 +1,0 @@
-### 🪄 Features
-* add patch infos

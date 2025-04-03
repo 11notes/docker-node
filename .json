@@ -1,0 +1,23 @@
+{
+  "image":"11notes/node",
+  "name":"node",
+  "root":"/node",
+  
+  "semver":{
+    "version":"22.14.0",
+    "stable":"22.14.0",
+    "latest":"23.11.0"
+  },
+
+  "readme":{
+    "description":"Run your node applications rootless and distroless",
+    "built":{
+      "node":"https://github.com/nodejs/node"
+    },
+    "distroless":{
+      "layers":[
+        "11notes/distroless"
+      ]
+    }
+  }
+}

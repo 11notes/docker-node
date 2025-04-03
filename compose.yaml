@@ -1,11 +1,18 @@
+name: "node"
 services:
   node:
-    image: "11notes/node:20.16.0"
-    container_name: "node"
+    image: "11notes/node:22.14.0"
+    read_only: true
     environment:
-      TZ: Europe/Zurich
+      TZ: "Europe/Zurich"
     volumes:
       - "node:/node"
-    restart: always
+    networks:
+      frontend:
+    restart: "always"
+
 volumes:
   node:
+
+networks:
+  frontend:

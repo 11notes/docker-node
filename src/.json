@@ -1,0 +1,8 @@
+{
+  "image":"11notes/node",
+  "description":"Run node compiled with O2 and mimalloc native on Alpine",
+  "name":"node",
+  "version":"22.11.0",
+  "parent":"11notes/alpine:stable",
+  "root":"/node"
+}

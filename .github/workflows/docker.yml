@@ -52,6 +52,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-22.04
+    timeout-minutes: 1380
 
     services:
       registry:

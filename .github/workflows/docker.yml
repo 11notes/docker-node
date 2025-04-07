@@ -24,11 +24,16 @@ on:
       readme:
         description: 'set WORKFLOW_GITHUB_README'
         required: false
-        default: 'false'      
+        default: 'false'
+        
+      etc:
+        description: 'json object with additional options due to 10 inputs limit'
+        required: false
 
 jobs:
   docker:
     runs-on: ${{ inputs.runs-on }}
+    timeout-minutes: 1440
 
     services:
       registry:
@@ -55,6 +60,7 @@ jobs:
           script: |
             const { existsSync, readFileSync } = require('node:fs');
             const { resolve } = require('node:path');
+            const { inspect } = require('node:util');
             const inputs = `${{ toJSON(github.event.inputs) }}`;
             const opt = {input:{}, dot:{}};            
 
@@ -81,22 +87,24 @@ jobs:
               core.setFailed(e);
             }
 
+            core.info(inspect(opt, {showHidden:false, depth:null, colors:true}));
+
             const docker = {
               image:{
                 name:opt.dot.image,
                 arch:(opt.dot.arch || 'linux/amd64,linux/arm64'),
-                prefix:((opt.input?.semverprefix) ? `${opt.input?.semverprefix}-` : ''),
-                suffix:((opt.input?.semversuffix) ? `-${opt.input?.semversuffix}` : ''),
+                prefix:((opt.input?.etc?.semverprefix) ? `${opt.input?.etc?.semverprefix}-` : ''),
+                suffix:((opt.input?.etc?.semversuffix) ? `-${opt.input?.etc?.semversuffix}` : ''),
                 description:(opt.dot?.readme?.description || ''),
                 tags:[],
               },
               app:{
                 image:opt.dot.image,
                 name:opt.dot.name,
-                version:(opt.input?.version || opt.dot.semver.version),
+                version:(opt.input?.etc?.version || opt.dot.semver.version),
                 root:opt.dot.root,
-                UID:(opt.input?.uid || 1000),
-                GID:(opt.input?.gid || 1000),
+                UID:(opt.input?.etc?.uid || 1000),
+                GID:(opt.input?.etc?.gid || 1000),
                 no_cache:new Date().getTime(),
               },
               cache:{
@@ -111,11 +119,11 @@ jobs:
             docker.app.suffix = docker.image.suffix;
 
             // setup tags
-              if(opt.input?.dockerfile !== 'arch.dockerfile' && opt.input?.tag){
+              if(opt.input?.etc?.dockerfile !== 'arch.dockerfile' && opt.input?.etc?.tag){
                 docker.image.tags.push(`${context.sha.substring(0,7)}`);
-                docker.image.tags.push(opt.input.tag);
-                docker.image.tags.push(`${opt.input.tag}-${docker.app.version}`);
-                docker.cache.name = `${docker.image.name}:buildcache-${opt.input.tag}`;
+                docker.image.tags.push(opt.input.etc.tag);
+                docker.image.tags.push(`${opt.input.etc.tag}-${docker.app.version}`);
+                docker.cache.name = `${docker.image.name}:buildcache-${opt.input.etc.tag}`;
               }else if(opt.dot?.semver?.version){
                 const semver = opt.dot.semver.version.split('.');
                 docker.image.tags.push(`${context.sha.substring(0,7)}`);
@@ -126,7 +134,7 @@ jobs:
                 }
                 if(opt.dot.semver?.stable && new RegExp(opt.dot.semver.stable, 'ig').test(docker.image.tags.join(','))) docker.image.tags.push('stable');
                 if(opt.dot.semver?.latest && new RegExp(opt.dot.semver.latest, 'ig').test(docker.image.tags.join(','))) docker.image.tags.push('latest');
-              }else if(opt.input?.version && opt.input.version === 'latest'){
+              }else if(opt.input?.etc?.version && opt.input.etc.version === 'latest'){
                 docker.image.tags.push('latest');
               }
 
@@ -152,12 +160,12 @@ jobs:
               core.exportVariable('DOCKER_IMAGE_TAGS', docker.tags.join(','));
               core.exportVariable('DOCKER_IMAGE_DESCRIPTION', docker.image.description);
               core.exportVariable('DOCKER_IMAGE_ARGUMENTS', arguments.join("\r\n"));
-              core.exportVariable('DOCKER_IMAGE_DOCKERFILE', opt.input?.dockerfile || 'arch.dockerfile');
+              core.exportVariable('DOCKER_IMAGE_DOCKERFILE', opt.input?.etc?.dockerfile || 'arch.dockerfile');
 
-              core.exportVariable('WORKFLOW_CREATE_RELEASE', (opt.input?.release || true));
-              core.exportVariable('WORKFLOW_CREATE_README', (opt.input?.readme || true));
-              core.exportVariable('WORKFLOW_GRYPE_FAIL_ON_SEVERITY', (opt.json?.grpye?.fail || true));
-              core.exportVariable('WORKFLOW_GRYPE_SEVERITY_CUTOFF', (opt.json?.grpye?.severity || 'high'));
+              core.exportVariable('WORKFLOW_CREATE_RELEASE', (opt.input?.release === undefined) ? false : opt.input.release);
+              core.exportVariable('WORKFLOW_CREATE_README', (opt.input?.readme === undefined) ? false : opt.input.readme);
+              core.exportVariable('WORKFLOW_GRYPE_FAIL_ON_SEVERITY', (opt.dot?.grype?.fail === undefined) ? true : opt.dot.grype.fail);
+              core.exportVariable('WORKFLOW_GRYPE_SEVERITY_CUTOFF', (opt.dot?.grype?.severity || 'high'));
 
 
 

@@ -10,6 +10,12 @@ on:
         required: false
         default: 'docker'
 
+      runs-on:
+        description: 'set runs-on for workflow (github or selfhosted)'
+        type: string
+        required: false
+        default: 'ubuntu-22.04'
+
       release:
         description: 'set WORKFLOW_GITHUB_RELEASE'
         required: false
@@ -18,41 +24,11 @@ on:
       readme:
         description: 'set WORKFLOW_GITHUB_README'
         required: false
-        default: 'false'
-
-      uid:
-        description: 'set IMAGE_UID'
-        required: false
-
-      gid:
-        description: 'set IMAGE_GID'
-        required: false
-
-      semverprefix:
-        description: 'prefix for semver tags'
-        required: false
-
-      semversuffix:
-        description: 'suffix for semver tags'
-        required: false
-
-      dockerfile:
-        description: 'dockerfile to build from'
-        required: false
-        default: 'arch.dockerfile'
-
-      tag:
-        description: 'single tag'
-        required: false
-      
-      version:
-        description: 'single version'
-        required: false
+        default: 'false'      
 
 jobs:
   docker:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 1380
+    runs-on: ${{ inputs.runs-on }}
 
     services:
       registry:
@@ -231,7 +207,7 @@ jobs:
 
       - name: grype / scan
         id: grype
-        uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342
+        uses: anchore/scan-action@dc6246fcaf83ae86fcc6010b9824c30d7320729e
         with:
           image: ${{ env.DOCKER_CACHE_GRYPE }}
           fail-build: ${{ env.WORKFLOW_GRYPE_FAIL_ON_SEVERITY }}
@@ -242,7 +218,7 @@ jobs:
 
       - name: grype / fail
         if: failure() || steps.grype.outcome == 'failure'
-        uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342
+        uses: anchore/scan-action@dc6246fcaf83ae86fcc6010b9824c30d7320729e
         with:
           image: ${{ env.DOCKER_CACHE_GRYPE }}
           fail-build: false

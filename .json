@@ -2,22 +2,17 @@
   "image":"11notes/node",
   "name":"node",
   "root":"/node",
-  "arch":"linux/amd64,linux/arm64,linux/arm/v7",
-  
-  "semver":{
-    "version":"22.14.0",
-    "stable":"22.14.0",
-    "latest":"23.11.0"
-  },
 
   "readme":{
-    "description":"Run your node applications rootless and distroless",
+    "description":"run your node applications rootless and distroless",
     "built":{
       "node":"https://github.com/nodejs/node"
     },
     "distroless":{
       "layers":[
-        "11notes/distroless"
+        "11notes/distroless",
+        "11notes/distroless:node",
+        "11notes/distroless:pnpm"
       ]
     }
   }

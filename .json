@@ -1,5 +1,6 @@
 {
   "image":"11notes/node",
+  "platform":"amd64,arm64",
   "name":"node",
   "root":"/node",
 

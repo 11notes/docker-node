@@ -1,94 +1,71 @@
-# :: Util
-  FROM 11notes/util AS util
+# ╔═════════════════════════════════════════════════════╗
+# ║                       SETUP                         ║
+# ╚═════════════════════════════════════════════════════╝
+  # GLOBAL
+  ARG APP_UID=1000 \
+      APP_GID=1000 \
+      APP_VERSION=0 \
+      APP_GO_VERSION=0
 
-# :: Build / node
-  FROM alpine AS build
-  ARG TARGETARCH
-  ARG APP_VERSION
-  ENV BUILD_DIR=/node-v${APP_VERSION}
-  ENV BUILD_BIN=/node-v${APP_VERSION}/out/Release/node
-
-  USER root
-
-  COPY --from=util /usr/local/bin/ /usr/local/bin
-
-  RUN set -ex; \
-    apk --update --no-cache add \
-      wget \
-      binutils-gold \
-      g++ \
-      gcc \
-      gnupg \
-      libgcc \
-      linux-headers \
-      make \
-      python3 \
-      curl \
-      upx \
-      py-setuptools;
-
-  RUN set -ex; \
-    cd /; \
-    wget "https://nodejs.org/dist/v${APP_VERSION}/node-v${APP_VERSION}.tar.xz"; \
-    tar -xf "node-v${APP_VERSION}.tar.xz";
-
-  RUN set -ex; \
-    cd ${BUILD_DIR}; \
-    ./configure --fully-static --enable-static; \
-    make -s -j $(nproc);
-
-  RUN set -ex; \
-    mkdir -p /distroless/usr/local/bin; \
-    eleven strip ${BUILD_BIN}; \
-    cp ${BUILD_BIN} /distroless/usr/local/bin;
-
-# :: Distroless / node
-  FROM scratch AS distroless-node
-  ARG APP_ROOT
-  COPY --from=build /distroless/ /
-
-
-# :: Build / file system
-  FROM alpine AS fs
-  ARG APP_ROOT
-  USER root
-
-  RUN set -ex; \
-    mkdir -p ${APP_ROOT};
-
-# :: Distroless / file system
-  FROM scratch AS distroless-fs
-  ARG APP_ROOT
-  USER root
-  COPY --from=fs ${APP_ROOT} /${APP_ROOT}
-
-# :: Header
+# FOREIGN IMAGES
   FROM 11notes/distroless AS distroless
-  FROM scratch
+  FROM 11notes/distroless:node-${APP_VERSION} AS distroless-node
+  FROM 11notes/distroless:pnpm AS distroless-pnpm
 
-  # :: arguments
-    ARG TARGETARCH
-    ARG APP_IMAGE
-    ARG APP_NAME
-    ARG APP_VERSION
-    ARG APP_ROOT
-    ARG APP_UID
-    ARG APP_GID
+# ╔═════════════════════════════════════════════════════╗
+# ║                       BUILD                         ║
+# ╚═════════════════════════════════════════════════════╝
+# :: ENTRYPOINT
+  FROM 11notes/go:${APP_GO_VERSION} AS entrypoint
+  COPY ./build/entrypoint /go/entrypoint
+  RUN set -ex; \
+    cd /go/entrypoint; \
+    eleven go build /entrypoint main.go; \
+    eleven distroless /entrypoint;
 
-  # :: environment
-    ENV APP_IMAGE=${APP_IMAGE}
-    ENV APP_NAME=${APP_NAME}
-    ENV APP_VERSION=${APP_VERSION}
-    ENV APP_ROOT=${APP_ROOT}
+
+# :: FILE-SYSTEM
+  FROM alpine AS file-system
+  ARG APP_ROOT
+  RUN set -ex; \
+    mkdir -p /distroless${APP_ROOT}/var; \
+    mkdir -p /distroless${APP_ROOT}/run;
+
+
+# ╔═════════════════════════════════════════════════════╗
+# ║                       IMAGE                         ║
+# ╚═════════════════════════════════════════════════════╝
+# :: HEADER
+  FROM alpine
+
+  # :: default arguments
+    ARG TARGETPLATFORM \
+        TARGETOS \
+        TARGETARCH \
+        TARGETVARIANT \
+        APP_IMAGE \
+        APP_NAME \
+        APP_VERSION \
+        APP_ROOT \
+        APP_UID \
+        APP_GID \
+        APP_NO_CACHE
+
+  # :: default environment
+    ENV APP_IMAGE=${APP_IMAGE} \
+        APP_NAME=${APP_NAME} \
+        APP_VERSION=${APP_VERSION} \
+        APP_ROOT=${APP_ROOT}
+
+  # :: app specific defaults
+    ENV XDG_CONFIG_HOME=${APP_ROOT}/run
 
   # :: multi-stage
-    COPY --from=distroless --chown=${APP_UID}:${APP_GID} / /
-    COPY --from=distroless-fs --chown=${APP_UID}:${APP_GID} / /
-    COPY --from=distroless-node --chown=${APP_UID}:${APP_GID} / /
+    COPY --from=distroless-node / /
+    COPY --from=distroless-pnpm / /
+    COPY --from=entrypoint /distroless/ /
+    COPY --from=file-system --chown=${APP_UID}:${APP_GID} /distroless/ /
 
-# :: Volumes
-  VOLUME ["${APP_ROOT}"]
-
-# :: Start
-  USER docker
-  ENTRYPOINT ["/usr/local/bin/node"]
+# :: EXECUTE
+  USER ${APP_UID}:${APP_GID}
+  ENTRYPOINT ["/usr/local/bin/entrypoint"]

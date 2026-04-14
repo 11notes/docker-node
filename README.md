@@ -105,4 +105,4 @@ docker pull quay.io/11notes/node:latest
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-node/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-node/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-node/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 14.04.2026, 11:55:21 (CET)*
+*created 14.04.2026, 12:10:03 (CET)*

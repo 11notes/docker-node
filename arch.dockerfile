@@ -36,7 +36,7 @@
 # ║                       IMAGE                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: HEADER
-  FROM alpine
+  FROM scratch
 
   # :: default arguments
     ARG TARGETPLATFORM \

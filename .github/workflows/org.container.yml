@@ -375,6 +375,8 @@ jobs:
                       case /11notes\/dotnetsdk\:\$\{APP_DOTNET9_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'dotnet9'); break;
                       case /11notes\/dotnetsdk\:\$\{APP_DOTNET10_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'dotnet10'); break;
                       case /11notes\/dotnetsdk\:\$\{APP_DOTNET11_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'dotnet11'); break;
+                      case /11notes\/node\:\$\{APP_NODE_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'node'); break;
+                      case /11notes\/node\:stable/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'node_stable'); break;
                     }
                   }catch(e){
                     throw new Error(`could not open ./${dockerfile}: ${e}`);

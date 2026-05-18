@@ -18,7 +18,7 @@
 # :: ENTRYPOINT
   FROM 11notes/go:${APP_GO_VERSION} AS entrypoint
   COPY ./build/entrypoint /go/entrypoint
-  RUN set -ex; \
+  RUN set -eux; \
     cd /go/entrypoint; \
     eleven go build /entrypoint main.go; \
     eleven distroless /entrypoint;
@@ -27,7 +27,7 @@
 # :: FILE-SYSTEM
   FROM alpine AS file-system
   ARG APP_ROOT
-  RUN set -ex; \
+  RUN set -eux; \
     mkdir -p /distroless${APP_ROOT}/var; \
     mkdir -p /distroless${APP_ROOT}/run;
 
